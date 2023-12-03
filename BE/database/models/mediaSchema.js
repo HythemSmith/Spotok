@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
 const ObjectId = Schema.ObjectId;
 
-const MediaSchema = new Schema ({
+const UserSchema = new Schema ({
     userID: {
         type: ObjectId
     },
@@ -27,3 +27,5 @@ const MediaSchema = new Schema ({
         require: true
     }
 }) 
+
+const User = mongoose.model('User', UserSchema);
