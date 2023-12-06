@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {Text, View, Image, SafeAreaView, TouchableOpacity, FlatList, ScrollView} from 'react-native';
+import styles from '../styles';
 
 const SearchScreen = () => {
     return (
@@ -10,14 +11,3 @@ const SearchScreen = () => {
 }
 
 export default SearchScreen;
-
-import { Platform, StyleSheet } from "react-native";
-
-const styles = StyleSheet.create({
-    container : {
-        flex : 1,
-        alignItems : 'center',
-        justifyContent : 'center',
-        backgroundColor : 'dimgray'
-    },
-})

@@ -1,15 +1,12 @@
 import React, { useState } from 'react';
-import {Text, View, Image, SafeAreaView, TouchableOpacity, FlatList, Pressable, ScrollView} from 'react-native';
-import { FontAwesome, Ionicons } from '@expo/vector-icons';
-import { Platform, StyleSheet } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import {Text, View, Image, TouchableOpacity, FlatList, Pressable, } from 'react-native';
+import { ScrollView } from 'react-native-virtualized-view'
+import {Ionicons} from '@expo/vector-icons';
 import {categories, playlists, artists, songs} from "../../components/components"
+import { Link } from 'expo-router';
+import styles from '../styles';
 
 const HomeScreen = () => {
-    const [categoryId, setCategoryId] = useState('1');
-    const [playlistId, setPlaylistId] = useState('1');
-    const [topArtists, setTopArtists] = useState('1');
-    const navigation = useNavigation();
     const greetingMessage = () => {
         const currentTime = new Date().getHours();
         if (currentTime < 12) {
@@ -43,23 +40,58 @@ const HomeScreen = () => {
                 Categories
             </Text>
             <View style={styles.categoriesTab}>
-                <FlatList
-                    data={categories}
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    renderItem={({item}) => (
-                        <TouchableOpacity onPress={() => {
-                            setCategoryId(item.id);
-                        }}>
-                            <View style={[styles.category, {
-                                backgroundColor: 'black'
-                            }]}>
-                                <Text style={[styles.subtitle
-                                ]}>{item.title}</Text>
-                            </View>
-                        </TouchableOpacity>
-                    )}
-                />
+                <Link href={{
+                    pathname: "/(tabs)/Playlist",
+                    }} asChild>
+                    <TouchableOpacity onPress={() => {}}>
+                        <View style={[styles.category, {
+                            backgroundColor: 'black'
+                        }]}>
+                            <Text style={[styles.subtitle
+                            ]}>Music</Text>
+                        </View>
+                    </TouchableOpacity>
+                </Link>
+                <Link href={{
+                    pathname: "/user/Podcast",
+                    }} asChild>
+                    <TouchableOpacity onPress={() => {}}>
+                        <View style={[styles.category, {
+                            backgroundColor: 'black'
+                        }]}>
+                            <Text style={[styles.subtitle
+                            ]}>Podcast</Text>
+                        </View>
+                    </TouchableOpacity>
+                </Link>
+                <Link href={{
+                    pathname: "/user/Short",
+                    }} asChild>
+                    <TouchableOpacity onPress={() => {}}>
+                        <View style={[styles.category, {
+                            backgroundColor: 'black'
+                        }]}>
+                            <Text style={[styles.subtitle
+                            ]}>Short</Text>
+                        </View>
+                    </TouchableOpacity>
+                </Link>
+                <Link href={{
+                    pathname: "/user/Songlist",
+                    params: {
+                        id: 'Trending',
+                        image: "https://i.iheart.com/v3/url/aHR0cHM6Ly9kM3dvNXdvanZ1djdsLmNsb3VkZnJvbnQubmV0L3RfcnNzX2l0dW5lc19zcXVhcmVfMTQwMC9pbWFnZXMuc3ByZWFrZXIuY29tL29yaWdpbmFsL2Q2N2FjM2NjOWIyNjRlYmMzYzg3NDY5OTEwMDc3Yjc5LmpwZw",
+                    }
+                    }} asChild>
+                    <TouchableOpacity onPress={() => {}}>
+                        <View style={[styles.category, {
+                            backgroundColor: 'black'
+                        }]}>
+                            <Text style={[styles.subtitle
+                            ]}>Trending</Text>
+                        </View>
+                    </TouchableOpacity>
+                </Link>
             </View>
             <Text style={styles.title}>
                 Playlists
@@ -70,7 +102,6 @@ const HomeScreen = () => {
                 columnWrapperStyle={{ justifyContent: "space-between" }}
                 renderItem={({item}) => (
                     <TouchableOpacity onPress={() => {
-                        setPlaylistId(item.id);
                     }}>
                         <Pressable
                         style={styles.playlist}>
@@ -101,7 +132,6 @@ const HomeScreen = () => {
                 showsHorizontalScrollIndicator={false}
                 renderItem={({item}) => (
                     <TouchableOpacity onPress={() => {
-                        setTopArtists(item.id);
                     }}>
                         <View style={{ margin: 10 }}>
                             <Image
@@ -121,93 +151,3 @@ const HomeScreen = () => {
   );
 };
 export default HomeScreen;
-
-const styles = StyleSheet.create({
-  container : {
-      flex : 1,
-      alignItems : 'center',
-      justifyContent : 'center',
-      backgroundColor : 'dimgray'
-  },
-  topContainer: {
-      flex: 1,
-      padding: 20,
-      alignItems : "baseline",
-      justifyContent : "space-around",
-    marginTop: 50,
-  },
-  topDetails: {
-      flexDirection: 'row',
-      alignItems : 'center',
-  },
-  avatar: {
-      width:60,
-      height: 60,
-      borderRadius: 50,
-      marginRight: 10,
-      borderColor: 'black',
-      borderWidth: 2,
-  },
-  tabRow: {
-      backgroundColor: 'black',
-      borderTopLeftRadius: 24,
-      borderTopRightRadius: 24,
-      position: 'absolute',
-      overflow: 'hidden',
-      alignItems : 'center',
-      justifyContent : 'space-around',
-  },
-  row: {
-      flexDirection: 'row',
-      alignItems : 'center',
-  },
-  greetings: {
-      color: 'white',
-      fontSize: 25,
-    marginRight: 30,
-  },
-  icon: {
-      width: 45,
-      height: 45,
-      backgroundColor: 'transparent',
-      borderRadius: 50,
-      marginLeft: 10,
-  },
-  categoriesTab: {
-      paddingTop: 10,
-      paddingLeft: 20,
-      marginBottom: 10,
-  },
-  category: {
-      borderRadius: 50,
-      minWidth: 50,
-      paddingVertical: 10,
-      paddingHorizontal: 15,
-      marginRight: 10,
-      alignItems: 'center',
-  },
-  subtitle: {
-      color: 'white',
-      fontSize: 20,
-      fontWeight: "500",
-  },
-  title: {
-      color: "white",
-      fontSize: 19,
-      fontWeight: "bold",
-      marginHorizontal: 10,
-      marginTop: 10,
-  },
-  playlist: {
-      height: 55,
-      width: 175,
-      flex: 1,
-      flexDirection: "row",
-      justifyContent: "space-between",
-      marginHorizontal: 10,
-      marginVertical: 8,
-      backgroundColor: "#282828",
-      borderRadius: 4,
-      elevation: 3,
-  },
-})
