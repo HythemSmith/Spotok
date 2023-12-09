@@ -1,1 +1,14 @@
-GET https://localhost:3000/signup
+GET http://localhost:3000/signup
+
+###
+
+POST http://localhost:3000/signup
+Content-Type: application/json
+
+{
+  "userName": "vinh",
+  "email": "longxuyen512",
+  "password": "123456",
+  "gender": true,
+  "dateOfBirth": "07/07/2003"
+}
