@@ -7,5 +7,4 @@ router.get('/signup', SiteController.getSignUp)
 router.post('/signup', SiteController.postSignUp)
 router.get('/login',)
 router.post('/login',)
-
 module.exports = router
