@@ -1,7 +1,7 @@
-import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useState } from "react";
-import { Ionicons } from "@expo/vector-icons";
-import { Stack, useLocalSearchParams } from "expo-router";
+import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native"
+import React, { useEffect, useState } from "react"
+import { Ionicons } from "@expo/vector-icons"
+import { Stack, useLocalSearchParams } from "expo-router"
 
 const SongInfoScreen = () => {
     const {id, image} = useLocalSearchParams();

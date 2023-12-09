@@ -52,7 +52,6 @@ const styles = StyleSheet.create({
         marginLeft: 10,
     },
     categoriesTab: {
-        flexDirection: 'row',
         paddingTop: 10,
         paddingLeft: 20,
         marginBottom: 10,
@@ -88,6 +87,15 @@ const styles = StyleSheet.create({
         backgroundColor: "#282828",
         borderRadius: 4,
         elevation: 3,
+    },
+    playlists: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'flex-start'
+    },
+    progressbar: {
+        height: "100%",
+        backgroundColor: "white",
     },
   })
   

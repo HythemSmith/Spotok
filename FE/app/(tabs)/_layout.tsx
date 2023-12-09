@@ -2,6 +2,7 @@ import { Link, Tabs } from 'expo-router';
 import { Pressable, useColorScheme } from 'react-native';
 import Colors from '../../constants/Colors';
 import { Ionicons } from '@expo/vector-icons';
+import React from 'react';
 
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof Ionicons>['name'];

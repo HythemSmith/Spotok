@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
-import {Text, View, Image, TouchableOpacity, FlatList, Pressable, } from 'react-native';
-import { ScrollView } from 'react-native-virtualized-view'
-import {Ionicons} from '@expo/vector-icons';
+import {Text, View, Image, SafeAreaView, TouchableOpacity, FlatList, Pressable, ScrollView} from 'react-native';
+import { FontAwesome, Ionicons } from '@expo/vector-icons';
+import { Platform, StyleSheet } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import {categories, playlists, artists, songs} from "../../components/components"
-import { Link } from 'expo-router';
-import styles from '../styles';
+import { Link } from 'expo-router'
+import styles from '../styles'
 
 const HomeScreen = () => {
+    const [categoryId, setCategoryId] = useState('1');
+    const [playlistId, setPlaylistId] = useState('1');
+    const [topArtists, setTopArtists] = useState('1');
+    const navigation = useNavigation();
     const greetingMessage = () => {
         const currentTime = new Date().getHours();
         if (currentTime < 12) {
@@ -40,58 +45,25 @@ const HomeScreen = () => {
                 Categories
             </Text>
             <View style={styles.categoriesTab}>
-                <Link href={{
-                    pathname: "/(tabs)/Playlist",
-                    }} asChild>
-                    <TouchableOpacity onPress={() => {}}>
-                        <View style={[styles.category, {
-                            backgroundColor: 'black'
-                        }]}>
-                            <Text style={[styles.subtitle
-                            ]}>Music</Text>
-                        </View>
-                    </TouchableOpacity>
-                </Link>
-                <Link href={{
-                    pathname: "/user/Podcast",
-                    }} asChild>
-                    <TouchableOpacity onPress={() => {}}>
-                        <View style={[styles.category, {
-                            backgroundColor: 'black'
-                        }]}>
-                            <Text style={[styles.subtitle
-                            ]}>Podcast</Text>
-                        </View>
-                    </TouchableOpacity>
-                </Link>
-                <Link href={{
-                    pathname: "/user/Short",
-                    }} asChild>
-                    <TouchableOpacity onPress={() => {}}>
-                        <View style={[styles.category, {
-                            backgroundColor: 'black'
-                        }]}>
-                            <Text style={[styles.subtitle
-                            ]}>Short</Text>
-                        </View>
-                    </TouchableOpacity>
-                </Link>
-                <Link href={{
-                    pathname: "/user/Songlist",
-                    params: {
-                        id: 'Trending',
-                        image: "https://i.iheart.com/v3/url/aHR0cHM6Ly9kM3dvNXdvanZ1djdsLmNsb3VkZnJvbnQubmV0L3RfcnNzX2l0dW5lc19zcXVhcmVfMTQwMC9pbWFnZXMuc3ByZWFrZXIuY29tL29yaWdpbmFsL2Q2N2FjM2NjOWIyNjRlYmMzYzg3NDY5OTEwMDc3Yjc5LmpwZw",
-                    }
-                    }} asChild>
-                    <TouchableOpacity onPress={() => {}}>
-                        <View style={[styles.category, {
-                            backgroundColor: 'black'
-                        }]}>
-                            <Text style={[styles.subtitle
-                            ]}>Trending</Text>
-                        </View>
-                    </TouchableOpacity>
-                </Link>
+                <FlatList
+                    data={categories}
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    renderItem={({item}) => (
+                        <Link href={{
+                            pathname: item.next,
+                            }} asChild>
+                        <TouchableOpacity onPress={() => {}}>
+                            <View style={[styles.category, {
+                                backgroundColor: 'black'
+                            }]}>
+                                <Text style={[styles.subtitle
+                                ]}>{item.title}</Text>
+                            </View>
+                        </TouchableOpacity>
+                        </Link>
+                    )}
+                />
             </View>
             <Text style={styles.title}>
                 Playlists
@@ -101,26 +73,33 @@ const HomeScreen = () => {
                 numColumns={2}
                 columnWrapperStyle={{ justifyContent: "space-between" }}
                 renderItem={({item}) => (
-                    <TouchableOpacity onPress={() => {
-                    }}>
-                        <Pressable
-                        style={styles.playlist}>
-                            <Image
-                                style={{ height: 55, width: 55 }}
-                                source={ item.image }
-                            />
-                            <View
-                                style={{ flex: 1, marginHorizontal: 8, justifyContent: "center" }}
-                            >
-                                <Text
-                                    numberOfLines={2}
-                                    style={{ fontSize: 19, fontWeight: "bold", color: "white" }}
+                    <Link href={{
+                        pathname: "/user/Songlist",
+                        params: {
+                            id: item.title,
+                            image: item.image,
+                        }
+                        }} asChild>
+                        <TouchableOpacity onPress={() => {}}>
+                            <Pressable
+                            style={styles.playlist}>
+                                <Image
+                                    style={{ height: 55, width: 55 }}
+                                    source={{ uri: item.image }}
+                                />
+                                <View
+                                    style={{ flex: 1, marginHorizontal: 8, justifyContent: "center" }}
                                 >
-                                    {item.title}
-                                </Text>
-                            </View>
-                        </Pressable>
-                    </TouchableOpacity>
+                                    <Text
+                                        numberOfLines={2}
+                                        style={{ fontSize: 19, fontWeight: "bold", color: "white" }}
+                                    >
+                                        {item.title}
+                                    </Text>
+                                </View>
+                            </Pressable>
+                        </TouchableOpacity>
+                    </Link>
                 )}
             />
             <Text style={styles.title}>
@@ -131,20 +110,29 @@ const HomeScreen = () => {
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 renderItem={({item}) => (
-                    <TouchableOpacity onPress={() => {
-                    }}>
-                        <View style={{ margin: 10 }}>
-                            <Image
-                                style={{ width: 130, height: 130, borderRadius: 5 }}
-                                source={ item.image }
-                            />
-                            <Text
-                                style={styles.subtitle}
-                            >
-                                {item.title}
-                            </Text>
-                        </View>
-                    </TouchableOpacity>
+                    <Link href={{
+                        pathname: "/user/Songlist",
+                        params: {
+                            id: item.title,
+                            image: item.image,
+                        }
+                        }} asChild>
+                        <TouchableOpacity onPress={() => {
+                            setTopArtists(item.id);
+                        }}>
+                            <View style={{ margin: 10 }}>
+                                <Image
+                                    style={{ width: 130, height: 130, borderRadius: 5 }}
+                                    source={{ uri: item.image }}
+                                />
+                                <Text
+                                    style={styles.subtitle}
+                                >
+                                    {item.title}
+                                </Text>
+                            </View>
+                        </TouchableOpacity>
+                    </Link>
                 )}
             />
         </ScrollView>
