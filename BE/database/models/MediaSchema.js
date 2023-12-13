@@ -2,9 +2,11 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
 const ObjectId = Schema.ObjectId;
 
-const UserSchema = new Schema ({
+const MediaSchema = new Schema ({
     ID: {
-        type: ObjectId
+        type: ObjectId,
+        unique: true,
+        default: () => new mongoose.Types.ObjectId()
     },
     title: {
         type: String,
@@ -12,6 +14,7 @@ const UserSchema = new Schema ({
     },
     creator: {
         type: ObjectId,
+        ref: 'User',
         require: true
     },
     album: {
@@ -36,4 +39,5 @@ const UserSchema = new Schema ({
     }
 }) 
 
-const User = mongoose.model('User', UserSchema);
+const Media = mongoose.model('MediaSchema', MediaSchema);
+module.exports = Media
