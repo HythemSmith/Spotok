@@ -3,11 +3,6 @@ const Schema = mongoose.Schema;
 const ObjectId = Schema.ObjectId;
 
 const UserSchema = new Schema({
-    userID: {
-        type: ObjectId,
-        unique: true,
-        default: () => new mongoose.Types.ObjectId()
-    },
     userName: {
         type: String,
         required: true
@@ -22,7 +17,7 @@ const UserSchema = new Schema({
         required: true
     },
     gender: {
-        type: Boolean,
+        type: String,
         required: true
     },
     dateOfBirth: {

@@ -7,20 +7,19 @@ class SiteController {
     }
 
     postSignUp = async (req, res) => {
-        const { userName, email, password, gender, dateOfBirth } = req.body;
+        const { username, email, password, gender, dateOfBirth } = req.body;
+        console.log(req.body)
         try {
             const checkEmail = await UserSchema.findOne({ email: email });
     
             if (!checkEmail) {
-                const newUser = new UserSchema({
-                    userName: userName,
+                await UserSchema.create({
+                    userName: username,
                     email: email,
                     password: password,
                     gender: gender,
                     dateOfBirth: dateOfBirth
                 });
-                console.log(newUser)
-                await newUser.save();
                 res.json({ message: "Sign up successfully" });
             } else {
                 res.json({ message: "Already exists" });
