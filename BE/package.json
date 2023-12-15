@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "live": "node server.js",
     "start": "nodemon server.js"
   },
   "author": "",

@@ -1,11 +1,11 @@
 const UserSchema = require('../database/models/UserSchema')
 class SiteController {
-
-    // [POST] home/signup
+    // [GET] home/signup
     getSignUp(req, res) {
         res.json({key: '9'})
     }
-
+    
+    // [POST] home/signup
     postSignUp = async (req, res) => {
         const { username, email, password, gender, dateOfBirth } = req.body;
         console.log(req.body)
@@ -30,8 +30,9 @@ class SiteController {
         }
     };
     
+    // [GET] home
     getHome(req, res){
-        res.json({key: '9'})
+        res.send('Hello world!')
     }
 }
 
