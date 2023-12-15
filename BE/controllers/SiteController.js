@@ -30,7 +30,7 @@ class SiteController {
         }
     };
     
-    home(req, res){
+    getHome(req, res){
         res.json({key: '9'})
     }
 }
