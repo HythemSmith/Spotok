@@ -79,6 +79,11 @@ class MediaController {
       res.status(500).json({ error: 'Failed to process data or create document' });
     }
   };
+
+  // [GET] /
+  getHome(req, res) {
+    res.JSON({ key: 9})
+  }
 }
   
 
