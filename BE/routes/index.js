@@ -4,7 +4,9 @@ const mediaRouter = require('./media')
 
 function route(app) {
     app.use('/media', mediaRouter)
-    app.use('/', (req, res) => { res.JSON({key: '9'})})
+    app.get('/', (req, res) => {
+        res.send('Hello World!')
+      })
 }
 
 module.exports = route
