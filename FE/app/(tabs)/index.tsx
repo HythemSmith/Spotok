@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import {Text, View, Image, SafeAreaView, TouchableOpacity, FlatList, Pressable, ScrollView} from 'react-native';
+import {Text, View, Image, SafeAreaView, TouchableOpacity, FlatList, Pressable} from 'react-native';
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
+import { ScrollView } from 'react-native-virtualized-view';
 import { Platform, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import {categories, playlists, artists, songs} from "../../components/components"
@@ -47,7 +48,7 @@ const HomeScreen = () => {
             <View style={styles.categoriesTab}>
                 <FlatList
                     data={categories}
-                    horizontal
+                    horizontal={true}
                     showsHorizontalScrollIndicator={false}
                     renderItem={({item}) => (
                         <Link href={{
