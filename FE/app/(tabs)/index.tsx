@@ -81,7 +81,7 @@ const HomeScreen = () => {
                         }
                         }} asChild>
                         <TouchableOpacity onPress={() => {}}>
-                            <Pressable
+                            <SafeAreaView
                             style={styles.playlist}>
                                 <Image
                                     style={{ height: 55, width: 55 }}
@@ -97,7 +97,7 @@ const HomeScreen = () => {
                                         {item.title}
                                     </Text>
                                 </View>
-                            </Pressable>
+                            </SafeAreaView>
                         </TouchableOpacity>
                     </Link>
                 )}
