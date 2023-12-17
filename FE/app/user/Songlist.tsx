@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react"
 import { Ionicons } from "@expo/vector-icons"
 import { Link, Stack, useLocalSearchParams } from "expo-router"
 import { songs } from "../../components/components";
-import Song from "../../components/song";
+import Song from "../../components/song_item";
 import { debounce } from "lodash";
 
 const SongInfoScreen = () => {

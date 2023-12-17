@@ -4,7 +4,7 @@ import {Text, View, TextInput, Image, TouchableOpacity, FlatList, Pressable,} fr
 import { ScrollView } from 'react-native-virtualized-view'
 import { Link } from 'expo-router'
 import {categories, playlists, artists, songs} from "../../components/components"
-import Song from '../../components/song'
+import Song from '../../components/song_item'
 import { debounce } from "lodash";
 import { Audio } from 'expo-av';
 
