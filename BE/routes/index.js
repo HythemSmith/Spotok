@@ -4,8 +4,8 @@ const mediaRouter = require('./media')
 
 function route(app) {
     app.use('/media', mediaRouter)
-    app.get('/home', siteRouter)
-    app.get('/', siteRouter)
+    app.use('/home', siteRouter)
+    app.use('/', siteRouter)
 }
 
 module.exports = route

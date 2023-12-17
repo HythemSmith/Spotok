@@ -82,7 +82,7 @@ class MediaController {
 
   // [GET] /
   getHome(req, res) {
-    res.JSON({ key: 9})
+    res.send('1230')
   }
 }
   
