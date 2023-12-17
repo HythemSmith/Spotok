@@ -1,10 +1,33 @@
-import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native"
+import { FlatList, Image, Pressable, StyleSheet, Text, View } from "react-native"
+import { ScrollView } from 'react-native-virtualized-view'
 import React, { useEffect, useState } from "react"
 import { Ionicons } from "@expo/vector-icons"
-import { Stack, useLocalSearchParams } from "expo-router"
+import { Link, Stack, useLocalSearchParams } from "expo-router"
+import { songs } from "../../components/components";
+import Song from "../../components/song";
+import { debounce } from "lodash";
 
 const SongInfoScreen = () => {
-    const {id, image} = useLocalSearchParams();
+    const {id, image, mode} = useLocalSearchParams();
+    const [searchedTracks, setSearchedTracks] = useState(songs);
+    const debouncedSearch = debounce(handleSearch, 800);
+    function handleSearch(text:string) {
+        if (mode === 'playlists')
+        {
+            const filteredTracks = songs.filter((item) =>
+                item.playlist.toLowerCase().includes(text.toLowerCase()));
+            setSearchedTracks(filteredTracks);
+        }
+        else if (mode === 'artists')
+        {
+            const filteredTracks = songs.filter((item) =>
+                item.artist.toLowerCase().includes(text.toLowerCase()));
+            setSearchedTracks(filteredTracks);
+        }
+    };
+    if(searchedTracks == songs){
+        debouncedSearch(id as string);
+    }
     return (
         <ScrollView style={{ marginTop: 50 }}>
             <Stack.Screen options={{
@@ -79,6 +102,24 @@ const SongInfoScreen = () => {
                 </Pressable>
             </View>
             </Pressable>
+            <FlatList
+                data={searchedTracks}
+                renderItem={({item}) => (
+                    <Link href={{
+                    pathname: "/user/Songscreen",
+                    params: {
+                        name: item.title,
+                        image: item.image,
+                        artist: item.artist,
+                    }}} asChild>
+                    <Pressable>
+                        <Song
+                        name = {item.title}
+                        image = {item.image}
+                        artist = {item.artist}/>
+                    </Pressable>
+                    </Link>
+                )}/>
         </ScrollView>
       );
     };

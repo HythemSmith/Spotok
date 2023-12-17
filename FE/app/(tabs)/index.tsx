@@ -53,6 +53,11 @@ const HomeScreen = () => {
                     renderItem={({item}) => (
                         <Link href={{
                             pathname: item.next,
+                            params: {
+                                id: item.title,
+                                image: item.image,
+                                mode: 'playlists',
+                            }
                             }} asChild>
                         <TouchableOpacity onPress={() => {}}>
                             <View style={[styles.category, {
@@ -79,6 +84,7 @@ const HomeScreen = () => {
                         params: {
                             id: item.title,
                             image: item.image,
+                            mode: 'playlists',
                         }
                         }} asChild>
                         <TouchableOpacity onPress={() => {}}>
@@ -116,6 +122,7 @@ const HomeScreen = () => {
                         params: {
                             id: item.title,
                             image: item.image,
+                            mode: 'artists'
                         }
                         }} asChild>
                         <TouchableOpacity onPress={() => {
