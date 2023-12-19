@@ -54,7 +54,7 @@ import { songs } from "../../components/components";
         await sound.pauseAsync();
       } else {
         await sound.playAsync();
-      }
+      } 
       is_playing = !is_playing;
     }
   };

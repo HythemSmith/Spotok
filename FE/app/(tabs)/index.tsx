@@ -23,6 +23,7 @@ const HomeScreen = () => {
             return "Good Evening";
         }
     };
+    
     const message = greetingMessage();
     return (
         <ScrollView style={{backgroundColor : 'dimgray'}}>
