@@ -9,10 +9,6 @@ import { Link } from 'expo-router'
 import styles from '../styles'
 
 const HomeScreen = () => {
-    const [categoryId, setCategoryId] = useState('1');
-    const [playlistId, setPlaylistId] = useState('1');
-    const [topArtists, setTopArtists] = useState('1');
-    const navigation = useNavigation();
     const greetingMessage = () => {
         const currentTime = new Date().getHours();
         if (currentTime < 12) {
@@ -126,9 +122,7 @@ const HomeScreen = () => {
                             mode: 'artists'
                         }
                         }} asChild>
-                        <TouchableOpacity onPress={() => {
-                            setTopArtists(item.id);
-                        }}>
+                        <TouchableOpacity onPress={() => {}}>
                             <View style={{ margin: 10 }}>
                                 <Image
                                     style={{ width: 130, height: 130, borderRadius: 5 }}
