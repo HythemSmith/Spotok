@@ -7,6 +7,7 @@ import { useNavigation } from "@react-navigation/native";
 import {categories, playlists, artists, songs} from "../../components/components"
 import { Link } from 'expo-router'
 import styles from '../styles'
+import { fetchDataFromBackend } from '../../components/testing'
 
 const HomeScreen = () => {
     const greetingMessage = () => {
@@ -19,8 +20,9 @@ const HomeScreen = () => {
             return "Good Evening";
         }
     };
-    
+    // trước cai này hả 
     const message = greetingMessage();
+    fetchDataFromBackend()
     return (
         <ScrollView style={{backgroundColor : 'dimgray'}}>
             <View style={styles.topContainer}>

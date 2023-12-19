@@ -10,31 +10,7 @@ class SiteController {
         res.json({key: '9'})
     }
     
-    // // [POST] /home/signup
-    // postSignUp = async (req, res) => {
-    //     const { username, email, password, gender, dateOfBirth } = req.body;
-    //     console.log(req.body)
-    //     try {
-    //         const checkEmail = await UserSchema.findOne({ email: email });
-    
-    //         if (!checkEmail) {
-    //             await UserSchema.create({
-    //                 userName: username,
-    //                 email: email,
-    //                 password: password,
-    //                 gender: gender,
-    //                 dateOfBirth: dateOfBirth
-    //             });
-    //             res.json({ message: "Sign up successfully" });
-    //         } else {
-    //             res.json({ message: "Already exists" });
-    //         }
-    //     } catch (error) {
-    //         console.log(error);
-    //         res.status(500).json({ message: "Server error" });
-    //     }
-    // };
-    // [POST] /home/signup
+    // [POST] /signup
     postSignUp = async (req, res) => {
         let { name, email, password,  dateOfBirth } = req.body|| {};
         name = name ? name.trim() : '';
@@ -46,7 +22,7 @@ class SiteController {
                 status: "FAILED",
                 message: "Empty input fields"
             });
-        } else if (!/^[a-zA-Z]*$/.test(name)){
+        } else if (!/^[a-zA-Z\s]*$/.test(name)){
             res.json({
                 status: "FAILED",
                 message: "Invalid name entered"
@@ -89,7 +65,7 @@ class SiteController {
                             res.json({
                                 status: "SUCCESS",
                                 message: "Signup successful",
-                                date: result,
+                                result,
                             })
                         })
                         .catch(err => {
@@ -139,7 +115,6 @@ class SiteController {
                                 res.json({
                                     status: "SUCCESS",
                                     message: "SignIn successful",
-                                    data: data
                                 })
                             } else{
                                 res.json({
@@ -170,7 +145,7 @@ class SiteController {
             }
     };
     // [GET] /home
-    getHome = async (req, res) => {
+    getHomeRandom = async (req, res) => {
         try {
             const randomDocuments = await UserSchema.aggregate([
                 { $sample: { size: 2 } }, 
@@ -196,7 +171,6 @@ class SiteController {
                     const flattenedSongs = songs.flat();
                     
                     const updatedSongsPromises = flattenedSongs.map(async song => {
-                        console.log(song.coverURL)
                         const coverURL = song.coverURL;
                         const storageURL = song.storageURL;
                         try {
@@ -234,6 +208,79 @@ class SiteController {
             res.status(500).json({ error: 'Server error' });
         }
     }
+
+    getHomeBase = async (req, res) => {
+        try {
+          const specificDocuments = await UserSchema.aggregate([
+            {
+              $match: {
+                name: { $in: ['Alec Benjamin', 'Charlie Puth'] } // Replace 'Name1' and 'Name2' with the specific names
+              }
+            },
+            {
+              $project: {
+                userName: 1,
+                _id: 1,
+              }
+            }
+          ]);
+          if (specificDocuments.length === 0) {
+            return res.status(404).json({ error: 'No random document found' });
+          }
+
+          const _ids = specificDocuments.map(user => user._id);
+          const _names = specificDocuments.map(name => name.userName);
+
+          try {
+                const songsPromises = _ids.map(_ids =>
+                  MediaSchema.find({ creator: _ids }) // Assuming 'creator' field in MediaSchema corresponds to user _id
+                    .select('title creator duration coverURL storageURL') // Select multiple fields
+                    .exec()
+                  );
+                  const songs = await Promise.all(songsPromises);
+                  const flattenedSongs = songs.flat();
+                  
+                  const updatedSongsPromises = flattenedSongs.map(async song => {
+                      console.log(song.coverURL)
+                      const coverURL = song.coverURL;
+                      const storageURL = song.storageURL;
+                      try {
+                          // Read cover image file content
+                          const coverData = await fs.readFile(coverURL);
+                          const base64CoverData = Buffer.from(coverData).toString('base64');
+                          const coverDataURL = `data:image/jpeg;base64,${base64CoverData}`;
+              
+                          // Read MP3 file content
+                          const mediaData = await fs.readFile(storageURL);
+                          const base64MediaData = Buffer.from(mediaData).toString('base64');
+                          const mediaDataURL = `data:audio/mp3;base64,${base64MediaData}`;
+              
+                          return { ...song._doc, coverURL: coverDataURL, storageURL: mediaDataURL };
+                      } catch (error) {
+                          console.error('Error reading files:', error);
+                          return { ...song._doc, coverURL: null, storageURL: null };
+                      }
+              });
+          
+              const updatedSongs = await Promise.all(updatedSongsPromises);
+
+              const responseData = randomDocuments.map((user, index) => ({
+                  artist: { userName: user.userName, _id: user._id },
+                  songs: updatedSongs[index],
+              }));
+
+              res.json({ responseData });
+          } catch (error) {
+              console.error('Error retrieving random title:', error);
+              res.status(500).json({ error: 'Server error' });
+          } 
+      
+          // Remaining logic to process songs for the specific documents...
+        } catch (error) {
+          console.error('Error retrieving specific documents:', error);
+          res.status(500).json({ error: 'Server error' });
+        }
+      };
 }
 
 module.exports = new SiteController

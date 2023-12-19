@@ -37,20 +37,17 @@ class MediaController {
       await new Promise((resolve, reject) => {
         upload(req, res, async function (err) {
           if (err instanceof multer.MulterError) {
-            console.log(err);
             reject(err);
             return res.status(500).json({ error: err.message });
           } else if (err) {
-            console.log(err);
             reject(err);
             return res.status(500).json({ error: err });
           }
 
           try {
             ({ title, album, creator, mediaType, duration } = JSON.parse(req.body.data));
-
             const paths = Object.values(req.files).flatMap(files => files.map(file => file.path));
-            [storageurl, coverurl] = paths;
+            [coverurl, storageurl] = paths;
 
             // Create an instance in MongoDB using await inside async function
             await MediaSchema.create({
@@ -60,7 +57,7 @@ class MediaController {
               mediaType: mediaType,
               duration: duration,
               storageURL: storageurl,
-              coverURL: mediaurl
+              coverURL: coverurl
             });
 
             // Resolve the Promise to signal completion
