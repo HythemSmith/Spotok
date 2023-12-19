@@ -281,6 +281,9 @@ class SiteController {
           res.status(500).json({ error: 'Server error' });
         }
       };
+    getHome(req, res){
+        res.send("10")
+    }
 }
 
 module.exports = new SiteController

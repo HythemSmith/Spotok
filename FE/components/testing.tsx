@@ -4,7 +4,7 @@ export const songs = []; // Exported songs array
 
 export const fetchDataFromBackend = async () => {
   try {
-    const response = await axios.get('http://localhost:3000/home');
+    const response = await axios.get('https://spotok.onrender.com/HomeRandom');
     const responseData = response.data; // Access the 'data' property
     console.log(responseData)
     
