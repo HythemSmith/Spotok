@@ -1,5 +1,9 @@
 const UserSchema = require('../database/models/UserSchema')
+const MediaSchema = require('../database/models/MediaSchema')
 const bcrypt = require('bcrypt')
+const fs = require('fs').promises;
+const path = require('path');
+
 class SiteController {
     // [GET] /home/signup
     getSignUp(req, res) {
@@ -166,8 +170,69 @@ class SiteController {
             }
     };
     // [GET] /home
-    getHome(req, res){
-        res.send('Hello world!')
+    getHome = async (req, res) => {
+        try {
+            const randomDocuments = await UserSchema.aggregate([
+                { $sample: { size: 2 } }, 
+                { $project: {
+                    userName: 1,
+                    _id: 1,
+            }}]);
+            
+            if (randomDocuments.length === 0) {
+              return res.status(404).json({ error: 'No random document found' });
+            }
+
+            const _ids = randomDocuments.map(user => user._id);
+            const _names = randomDocuments.map(name => name.userName);
+
+            try {
+                const songsPromises = _ids.map(_ids =>
+                    MediaSchema.find({ creator: _ids }) // Assuming 'creator' field in MediaSchema corresponds to user _id
+                      .select('title creator duration coverURL storageURL') // Select multiple fields
+                      .exec()
+                    );
+                    const songs = await Promise.all(songsPromises);
+                    const flattenedSongs = songs.flat();
+                    
+                    const updatedSongsPromises = flattenedSongs.map(async song => {
+                        console.log(song.coverURL)
+                        const coverURL = song.coverURL;
+                        const storageURL = song.storageURL;
+                        try {
+                            // Read cover image file content
+                            const coverData = await fs.readFile(coverURL);
+                            const base64CoverData = Buffer.from(coverData).toString('base64');
+                            const coverDataURL = `data:image/jpeg;base64,${base64CoverData}`;
+                
+                            // Read MP3 file content
+                            const mediaData = await fs.readFile(storageURL);
+                            const base64MediaData = Buffer.from(mediaData).toString('base64');
+                            const mediaDataURL = `data:audio/mp3;base64,${base64MediaData}`;
+                
+                            return { ...song._doc, coverURL: coverDataURL, storageURL: mediaDataURL };
+                        } catch (error) {
+                            console.error('Error reading files:', error);
+                            return { ...song._doc, coverURL: null, storageURL: null };
+                        }
+                });
+            
+                const updatedSongs = await Promise.all(updatedSongsPromises);
+
+                const responseData = randomDocuments.map((user, index) => ({
+                    artist: { userName: user.userName, _id: user._id },
+                    songs: updatedSongs[index],
+                }));
+
+                res.json({ responseData });
+            } catch (error) {
+                console.error('Error retrieving random title:', error);
+                res.status(500).json({ error: 'Server error' });
+            }    
+        } catch (error) {
+            console.error('Error retrieving random title:', error);
+            res.status(500).json({ error: 'Server error' });
+        }
     }
 }
 
