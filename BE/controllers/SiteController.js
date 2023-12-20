@@ -22,7 +22,7 @@ class SiteController {
                 status: "FAILED",
                 message: "Empty input fields"
             });
-        } else if (!/^[a-zA-Z\s]*$/.test(name)){
+        } else if (!/^[a-zA-Z\s1-9]*$/.test(name)){
             res.json({
                 status: "FAILED",
                 message: "Invalid name entered"
@@ -208,7 +208,6 @@ class SiteController {
             res.status(500).json({ error: 'Server error' });
         }
     }
-
     getHomeBase = async (req, res) => {
         try {
           const specificDocuments = await UserSchema.aggregate([
