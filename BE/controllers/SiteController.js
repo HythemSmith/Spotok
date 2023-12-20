@@ -148,7 +148,7 @@ class SiteController {
         try {
             const randomDocuments = await UserSchema.aggregate([
                 { $sample: { size: 2 } },
-                { $project: { userName: 1, _id: 1 } }
+                { $project: { userName: 1, _id: 1, avatar: 1 } }
             ]);
     
             if (randomDocuments.length === 0) {
@@ -160,7 +160,7 @@ class SiteController {
                 .select('title creator duration coverURL storageURL');
     
             const responseData = randomDocuments.map(user => ({
-                artist: { userName: user.userName, _id: user._id },
+                artist: { userName: user.userName, _id: user._id , avatar: user.avatar},
                 songs: songs.filter(song => song.creator.toString() === user._id.toString())
             }));
             console.log(responseData)
