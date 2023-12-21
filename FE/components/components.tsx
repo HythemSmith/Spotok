@@ -1,18 +1,60 @@
 import * as React from 'react';
 import axios from 'axios';
 
-export const songs = []; // Exported songs array
+// Define the types based on your provided response structure
+type Song = {
+    _id: string;
+    title: string;
+    creator: string;
+    duration: string;
+    storageURL: string;
+    image: string;
+};
+
+type Artist = {
+    _id: string;
+    title: string; // Changed from userName to title
+    image: string; // Changed from avatar to image
+};
+
+export const songs: Song[] = [];
+export const artists: Artist[] = [];
 
 export const fetchDataFromBackend = async () => {
-  try {
-    const response = await axios.get('localhost:3000/home');
-    songs.push(...response.data); // Add fetched data to the 'songs' array
-    return songs; // Return the updated 'songs' array
-  } catch (error) {
-    console.error('Error fetching data:', error);
-    return null; // or handle the error as needed
-  }
+    try {
+        const response = await axios.get('https://spotok.onrender.com/homerandom'); // Replace with your API endpoint
+        const responseData = response.data.responseData;
+
+        responseData.forEach((item: any) => {
+            const artist: Artist = {
+                _id: item.artist._id,
+                title: item.artist.userName, // Assigning userName to title
+                image: item.artist.avatar // Assigning avatar to image
+            };
+            artists.push(artist);
+            console.log()
+            item.songs.forEach((song_item: any) => {
+                const song: Song = {
+                    _id: song_item._id,
+                    title: song_item.title,
+                    creator: item.artist.userName,
+                    duration: song_item.duration,
+                    storageURL: song_item.storageURL,
+                    image: song_item.coverURL
+                }
+                songs.push(song)
+            })
+
+        });
+
+        return { songs, artists };
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        return null;
+    }
 };
+
+
 
 const categories = [
     {
@@ -78,39 +120,39 @@ const playlists = [
     },
 ];
 
-const artists = [
-    {
-        id: '1',
-        title: 'Đen Vâu',
-        image: 'https://vtv1.mediacdn.vn/zoom/640_400/2021/5/14/2j3a9577-editc-1620944229636282182804-crop-16210641534952132081719.jpg'
+// const artists = [
+//     {
+//         id: '1',
+//         title: 'Đen Vâu',
+//         image: 'https://vtv1.mediacdn.vn/zoom/640_400/2021/5/14/2j3a9577-editc-1620944229636282182804-crop-16210641534952132081719.jpg'
 
-    },
-    {
-        id: '2',
-        title: 'Hà Anh Tuấn',
-        image: 'https://avatar-ex-swe.nixcdn.com/singer/avatar/2018/06/27/e/8/8/5/1530074198530_600.jpg'
-    },
-    {
-        id: '3',
-        title: 'Tuấn Ngọc',
-        image: 'https://upload.wikimedia.org/wikipedia/commons/3/39/Tuan_Ngoc.jpg'
-    },
-    {
-        id: '4',
-        title: 'Mozart',
-        image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Wolfgang-amadeus-mozart_1.jpg/195px-Wolfgang-amadeus-mozart_1.jpg'
-    },
-    {
-        id: '5',
-        title: 'Trịnh Trung Kiên',
-        image: 'https://yt3.googleusercontent.com/ytc/APkrFKYunKRAH-WlHsD2rB_L0Qy_lu1sHpdSV9-Bphlr=s900-c-k-c0x00ffffff-no-rj'
-    },
-    {
-        id: '6',
-        title: 'Thịnh Suy',
-        image: 'https://static.wikia.nocookie.net/producerviet/images/1/1a/Th%E1%BB%8Bnh_Suy.jpeg/revision/latest?cb=20221201113323'
-    },
-];
+//     },
+//     {
+//         id: '2',
+//         title: 'Hà Anh Tuấn',
+//         image: 'https://avatar-ex-swe.nixcdn.com/singer/avatar/2018/06/27/e/8/8/5/1530074198530_600.jpg'
+//     },
+//     {
+//         id: '3',
+//         title: 'Tuấn Ngọc',
+//         image: 'https://upload.wikimedia.org/wikipedia/commons/3/39/Tuan_Ngoc.jpg'
+//     },
+//     {
+//         id: '4',
+//         title: 'Mozart',
+//         image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Wolfgang-amadeus-mozart_1.jpg/195px-Wolfgang-amadeus-mozart_1.jpg'
+//     },
+//     {
+//         id: '5',
+//         title: 'Trịnh Trung Kiên',
+//         image: 'https://yt3.googleusercontent.com/ytc/APkrFKYunKRAH-WlHsD2rB_L0Qy_lu1sHpdSV9-Bphlr=s900-c-k-c0x00ffffff-no-rj'
+//     },
+//     {
+//         id: '6',
+//         title: 'Thịnh Suy',
+//         image: 'https://static.wikia.nocookie.net/producerviet/images/1/1a/Th%E1%BB%8Bnh_Suy.jpeg/revision/latest?cb=20221201113323'
+//     },
+// ];
 
 // const songs = [
 //     {
@@ -241,4 +283,4 @@ const artists = [
 //     },
 // ];
 
-export {categories, playlists, artists}
+export {categories, playlists}

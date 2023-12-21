@@ -1,15 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {Text, View, Image, SafeAreaView, TouchableOpacity, FlatList, Pressable} from 'react-native';
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import { ScrollView } from 'react-native-virtualized-view';
 import { Platform, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import {categories, playlists, artists, songs} from "../../components/components"
+import {categories, playlists, fetchDataFromBackend, songs, artists} from "../../components/components"
 import { Link } from 'expo-router'
 import styles from '../styles'
-import { fetchDataFromBackend } from '../../components/testing'
+//import { fetchDataFromBackend, songs, artists } from '../../components/testing';
 
 const HomeScreen = () => {
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    const fetchData = async () => {
+        try {
+            const fetchedData = await fetchDataFromBackend();
+            if (fetchedData) {
+                // Process the fetched data
+                setIsLoading(false); // Set loading state to false when data is fetched
+                songs.forEach((item) => {
+                    console.log(item)
+                })
+            } else {
+                console.error('Data fetching failed or returned null.');
+            }
+        } catch (error) {
+            console.error('Error fetching data:', error);
+            setIsLoading(false); // Set loading state to false on error
+        }
+    };
+
+    // Rest of your component
+    if (isLoading) {
+        return (
+            <View>
+                <Text>Loading...</Text>
+            </View>
+        );
+    }
     const greetingMessage = () => {
         const currentTime = new Date().getHours();
         if (currentTime < 12) {
@@ -22,7 +54,6 @@ const HomeScreen = () => {
     };
     // trước cai này hả 
     const message = greetingMessage();
-    fetchDataFromBackend()
     return (
         <ScrollView style={{backgroundColor : 'dimgray'}}>
             <View style={styles.topContainer}>

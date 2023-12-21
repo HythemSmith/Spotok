@@ -8,26 +8,30 @@ import Song from "../../components/song_item";
 import { debounce } from "lodash";
 
 const SongInfoScreen = () => {
-    const {id, image, mode} = useLocalSearchParams();
-    const [searchedTracks, setSearchedTracks] = useState(songs);
-    const debouncedSearch = debounce(handleSearch, 800);
-    function handleSearch(text:string) {
-        if (mode === 'playlists')
-        {
-            const filteredTracks = songs.filter((item) =>
-                item.playlist.toLowerCase().includes(text.toLowerCase()));
-            setSearchedTracks(filteredTracks);
+    const { id, image, mode } = useLocalSearchParams();
+    const [searchedTracks, setSearchedTracks] = useState([]);
+
+    useEffect(() => {
+        const debouncedSearch = debounce(handleSearch, 800);
+
+        function handleSearch(text: string) {
+            if (mode === 'playlists') {
+                const filteredTracks = songs.filter((item) =>
+                    item.playlist.toLowerCase().includes(text.toLowerCase())
+                );
+                setSearchedTracks(filteredTracks);
+            } else if (mode === 'artists') {
+                const filteredTracks = songs.filter((item) =>
+                    item.creator.includes(text)
+                );
+                setSearchedTracks(filteredTracks);
+            }
         }
-        else if (mode === 'artists')
-        {
-            const filteredTracks = songs.filter((item) =>
-                item.artist.toLowerCase().includes(text.toLowerCase()));
-            setSearchedTracks(filteredTracks);
+
+        if (!searchedTracks.length) {
+            debouncedSearch(id as string);
         }
-    };
-    if(searchedTracks == songs){
-        debouncedSearch(id as string);
-    }
+    }, [id, mode, searchedTracks]);
     return (
         <ScrollView style={{ marginTop: 50 }}>
             <Stack.Screen options={{
@@ -37,7 +41,7 @@ const SongInfoScreen = () => {
             <View style={{ flex: 1, alignItems: "center" }}>
                 <Image
                 style={{ width: 200, height: 200 }}
-                source={{uri:image as string}}
+                source={{uri: image as string}}
                 />
             </View>
         </View>
@@ -110,13 +114,13 @@ const SongInfoScreen = () => {
                     params: {
                         name: item.title,
                         image: item.image,
-                        artist: item.artist,
+                        artist: item.title
                     }}} asChild>
                     <Pressable>
                         <Song
                         name = {item.title}
                         image = {item.image}
-                        artist = {item.artist}/>
+                        artist = {item.creator}/>
                     </Pressable>
                     </Link>
                 )}/>
