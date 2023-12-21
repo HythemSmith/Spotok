@@ -182,10 +182,11 @@ class SiteController {
                   $project: {
                     userName: 1,
                     _id: 1,
+                    avatar: 1,
                   }
                 }
             ]);
-    
+            
             if (randomDocuments.length === 0) {
                 return res.status(404).json({ error: 'No random document found' });
             }
