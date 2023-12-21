@@ -174,16 +174,16 @@ class SiteController {
         try {
             const randomDocuments = await UserSchema.aggregate([
                 {
-                    $match: {
-                      name: { $in: ['Carly Rae Jepsen', 'Charlie Puth'] } // Replace 'Name1' and 'Name2' with the specific names
-                    }
-                  },
-                  {
-                    $project: {
-                      userName: 1,
-                      _id: 1,
-                    }
+                  $match: {
+                    userName: { $in: ['Carly Rae Jepsen', 'Charlie Puth'] } // Replace with specific names
                   }
+                },
+                {
+                  $project: {
+                    userName: 1,
+                    _id: 1,
+                  }
+                }
             ]);
     
             if (randomDocuments.length === 0) {
