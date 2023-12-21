@@ -21,7 +21,7 @@ const UserSchema = new Schema({
     },
     avatar:{
         type: String,
-        required: true
+        default: "https://drive.google.com/uc?id=1NsbNaF1VS_I_2Yvtikez3OLWzNPTDW-3"
     }
 });
 

@@ -7,7 +7,8 @@ const SiteController = require('../controllers/SiteController')
 router.get('/signup', SiteController.getSignUp)
 router.post('/signup', SiteController.postSignUp)
 router.post('/login', SiteController.postLogin)
-router.get('/HomeRandom', SiteController.getHomeRandom)
+router.get('/homerandom', SiteController.getHomeRandom)
+router.get('/homebase', SiteController.getHomeBase)
 router.get(['/','/home'], SiteController.getHome)
 
 

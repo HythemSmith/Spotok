@@ -172,76 +172,40 @@ class SiteController {
     }
     getHomeBase = async (req, res) => {
         try {
-          const specificDocuments = await UserSchema.aggregate([
-            {
-              $match: {
-                name: { $in: ['Alec Benjamin', 'Charlie Puth'] } // Replace 'Name1' and 'Name2' with the specific names
-              }
-            },
-            {
-              $project: {
-                userName: 1,
-                _id: 1,
-              }
+            const randomDocuments = await UserSchema.aggregate([
+                {
+                    $match: {
+                      name: { $in: ['Carly Rae Jepsen', 'Charlie Puth'] } // Replace 'Name1' and 'Name2' with the specific names
+                    }
+                  },
+                  {
+                    $project: {
+                      userName: 1,
+                      _id: 1,
+                    }
+                  }
+            ]);
+    
+            if (randomDocuments.length === 0) {
+                return res.status(404).json({ error: 'No random document found' });
             }
-          ]);
-          if (specificDocuments.length === 0) {
-            return res.status(404).json({ error: 'No random document found' });
-          }
+            const userIds = randomDocuments.map(user => user._id);
 
-          const _ids = specificDocuments.map(user => user._id);
-          const _names = specificDocuments.map(name => name.userName);
-
-          try {
-                const songsPromises = _ids.map(_ids =>
-                  MediaSchema.find({ creator: _ids }) // Assuming 'creator' field in MediaSchema corresponds to user _id
-                    .select('title creator duration coverURL storageURL') // Select multiple fields
-                    .exec()
-                  );
-                  const songs = await Promise.all(songsPromises);
-                  const flattenedSongs = songs.flat();
-                  
-                  const updatedSongsPromises = flattenedSongs.map(async song => {
-                      console.log(song.coverURL)
-                      const coverURL = song.coverURL;
-                      const storageURL = song.storageURL;
-                      try {
-                          // Read cover image file content
-                          const coverData = await fs.readFile(coverURL);
-                          const base64CoverData = Buffer.from(coverData).toString('base64');
-                          const coverDataURL = `data:image/jpeg;base64,${base64CoverData}`;
-              
-                          // Read MP3 file content
-                          const mediaData = await fs.readFile(storageURL);
-                          const base64MediaData = Buffer.from(mediaData).toString('base64');
-                          const mediaDataURL = `data:audio/mp3;base64,${base64MediaData}`;
-              
-                          return { ...song._doc, coverURL: coverDataURL, storageURL: mediaDataURL };
-                      } catch (error) {
-                          console.error('Error reading files:', error);
-                          return { ...song._doc, coverURL: null, storageURL: null };
-                      }
-              });
-          
-              const updatedSongs = await Promise.all(updatedSongsPromises);
-
-              const responseData = randomDocuments.map((user, index) => ({
-                  artist: { userName: user.userName, _id: user._id },
-                  songs: updatedSongs[index],
-              }));
-              
-              res.json({ responseData });
-          } catch (error) {
-              console.error('Error retrieving random title:', error);
-              res.status(500).json({ error: 'Server error' });
-          } 
-      
-          // Remaining logic to process songs for the specific documents...
+            const songs = await MediaSchema.find({ creator: { $in: userIds } })
+                .select('title creator duration coverURL storageURL');
+    
+            const responseData = randomDocuments.map(user => ({
+                artist: { userName: user.userName, _id: user._id , avatar: user.avatar},
+                songs: songs.filter(song => song.creator.toString() === user._id.toString())
+            }));
+            console.log(responseData)
+            res.json({ responseData });
         } catch (error) {
-          console.error('Error retrieving specific documents:', error);
-          res.status(500).json({ error: 'Server error' });
+            console.error('Error retrieving random documents:', error);
+            res.status(500).json({ error: 'Server error' });
         }
-      };
+    }
+
     getHome(req, res){
         res.send("10")
     }
