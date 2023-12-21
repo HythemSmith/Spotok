@@ -147,7 +147,7 @@ class SiteController {
     getHomeRandom = async (req, res) => {
         try {
             const randomDocuments = await UserSchema.aggregate([
-                { $sample: { size: 2 } },
+                { $sample: { size: 4 } },
                 { $project: { userName: 1, _id: 1, avatar: 1 } }
             ]);
     
@@ -175,7 +175,7 @@ class SiteController {
             const randomDocuments = await UserSchema.aggregate([
                 {
                   $match: {
-                    userName: { $in: ['Carly Rae Jepsen', 'Charlie Puth'] } // Replace with specific names
+                    userName: { $in: ['Carly Rae Jepsen', 'Charlie Puth', "Alec Benjamin", ' Mindme'] } // Replace with specific names
                   }
                 },
                 {
