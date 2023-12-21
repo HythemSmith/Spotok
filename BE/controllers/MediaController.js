@@ -88,67 +88,65 @@ class MediaController {
       }
     });
 
+    // Function to get the direct download link
+    async function getDirectDownloadLink(fileId) {
+      return `https://drive.google.com/uc?id=${fileId}`;
+    }
     // File upload function
     async function uploadFile(filePath, folderId) {
-      const fileName = path.basename(filePath); // Get the base name of the file path
-      const mimeType = getMimeType(filePath)
+      const fileName = path.basename(filePath);
+      const mimeType = getMimeType(filePath);
       const drive = google.drive({ version: 'v3', auth: jwtClient });
-
-      // Check if file already exists
+    
       const response = await drive.files.list({
         q: `name='${fileName}' and '${folderId}' in parents`,
         fields: 'files(id, name)',
         spaces: 'drive'
       });
-
+    
       const files = response.data.files;
       if (files.length > 0) {
         console.log(`The file ${fileName} already exists.`);
         return;
       }
+    
       const fileMetadata = {
-        'name': fileName,
-        'mimeType': mimeType,
-        'parents': [folderId]
+        name: fileName,
+        mimeType: mimeType,
+        parents: [folderId]
       };
-      //---------------------------------//
+    
       const media = {
         mimeType: mimeType,
         body: fs.createReadStream(filePath)
       };
-      //---------------------------------//
-      const file = await drive.files.create({
-        resource: fileMetadata,
-        media: media,
-        fields: 'id'
-      });
-      //---------------------------------//
-      if (file.data.id) {
-        await drive.permissions.create({
-          fileId: file.data.id,
-          requestBody: {
-            role: 'reader',
-            type: 'anyone'
-          }
+    
+      try {
+        const file = await drive.files.create({
+          resource: fileMetadata,
+          media: media,
+          fields: 'id' // Only retrieve the file ID
         });
     
-        const result = await drive.files.get({
-          fileId: file.data.id,
-          fields: 'webViewLink'
-        });
-        
-        fs.unlink(filePath, (err) => {
-          if (err) {
-            console.error(`Error deleting file: ${err}`);
-          } else {
-            console.log(`File deleted: ${filePath}`);
-          }
-        });
-        return result.data.webViewLink;
+        if (file.data.id) {
+          const directDownloadLink = await getDirectDownloadLink(file.data.id);
+    
+          // Clean-up: Delete the local file after uploading
+          fs.unlink(filePath, (err) => {
+            if (err) {
+              console.error(`Error deleting file: ${err}`);
+            } else {
+              console.log(`File deleted: ${filePath}`);
+            }
+          });
+          console.log(directDownloadLink);
+          return directDownloadLink;
+        }
+      } catch (error) {
+        console.error('Error uploading file:', error);
+        return null;
       }
-
     }
-    
   }
   // [GET] /
   getHome(req, res) {
