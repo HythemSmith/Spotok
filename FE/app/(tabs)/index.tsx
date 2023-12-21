@@ -22,9 +22,12 @@ const HomeScreen = () => {
             if (fetchedData) {
                 // Process the fetched data
                 setIsLoading(false); // Set loading state to false when data is fetched
-                songs.forEach((item) => {
-                    console.log(item)
-                })
+                // artists.forEach((item) => {
+                //     console.log(item)
+                // })
+                // songs.forEach((item) => {
+                //     console.log(item)
+                // })
             } else {
                 console.error('Data fetching failed or returned null.');
             }
@@ -128,7 +131,7 @@ const HomeScreen = () => {
                                     style={{ flex: 1, marginHorizontal: 8, justifyContent: "center" }}
                                 >
                                     <Text
-                                        numberOfLines={2}
+                                        numberOfLines={1}
                                         style={{ fontSize: 19, fontWeight: "bold", color: "white" }}
                                     >
                                         {item.title}
@@ -161,11 +164,14 @@ const HomeScreen = () => {
                                     style={{ width: 130, height: 130, borderRadius: 5 }}
                                     source={{ uri: item.image }}
                                 />
-                                <Text
-                                    style={styles.subtitle}
-                                >
-                                    {item.title}
-                                </Text>
+                                <View style={{ width: 130 }}>
+                                    <Text
+                                        style={styles.subtitle}
+                                        numberOfLines={1} // Limit the number of lines for the text
+                                    >
+                                        {item.title}
+                                    </Text>
+                                </View>
                             </View>
                         </TouchableOpacity>
                     </Link>

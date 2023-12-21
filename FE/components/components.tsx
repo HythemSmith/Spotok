@@ -22,7 +22,7 @@ export const artists: Artist[] = [];
 
 export const fetchDataFromBackend = async () => {
     try {
-        const response = await axios.get('https://spotok.onrender.com/homerandom'); // Replace with your API endpoint
+        const response = await axios.get('https://spotok.onrender.com/homebase'); // Replace with your API endpoint
         const responseData = response.data.responseData;
 
         responseData.forEach((item: any) => {

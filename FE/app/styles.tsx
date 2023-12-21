@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     progressbar: {
         height: "100%",
         backgroundColor: "white",
-    },
+    }
   })
   
 export default styles
