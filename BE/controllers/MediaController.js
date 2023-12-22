@@ -54,11 +54,13 @@ class MediaController {
       const { image, media } = req.files; // Files save to temp
       // Authorize to gg drive
       authorize()
-
+      let coverURL, storageURL
       try {
         const { title, album, creator, mediaType, duration } = JSON.parse(req.body.data)
-        const coverURL = await uploadFile(image[0].path, coverFolderID)
-        const storageURL = await uploadFile(media[0].path, mediaFolderID)
+        if(image !== undefined) {
+          coverURL = await uploadFile(image[0].path, coverFolderID)
+        }
+        storageURL = await uploadFile(media[0].path, mediaFolderID)
         if(coverURL == 0|| storageURL == 0) {
           return res.status(500).json({
             message: 'Files Already exists!',

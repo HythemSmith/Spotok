@@ -64,7 +64,6 @@ class SiteController {
                             res.json({
                                 status: "SUCCESS",
                                 message: "Signup successful",
-                                result,
                             })
                         })
                         .catch(err => {
