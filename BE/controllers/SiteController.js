@@ -21,7 +21,7 @@ class SiteController {
                 status: "FAILED",
                 message: "Empty input fields"
             });
-        } else if (!/^[a-zA-Z\s1-9]*$/.test(name)){
+        } else if (!/^[\sa-zA-Zàáảãạăắằẳẵặâấầẩẫậđèéẻẽẹêếềểễệìíỉĩịòóỏõọôốồổỗộơớờởỡợùúủũụưứừửữựỳỵỷỹỵ0-9]*$/i.test(name)){
             res.json({
                 status: "FAILED",
                 message: "Invalid name entered"
