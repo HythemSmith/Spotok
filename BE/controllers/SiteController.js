@@ -205,9 +205,33 @@ class SiteController {
             res.status(500).json({ error: 'Server error' });
         }
     }
-
     getHome(req, res){
         res.send("10")
+    }
+    // [GET] /short
+    getShort = async (req, res) => {
+        try {
+            const randomVideos = await MediaSchema.aggregate([
+                {
+                  $match: {
+                    mediaType: "Video" 
+                  }
+                },
+                {
+                  $project: {
+                    title: 1,
+                    storageURL: 1
+                  }
+                }
+            ]);
+            if (randomVideos.length === 0) {
+                return res.status(404).json({ error: 'No Video found' });
+            }
+            res.json({ randomVideos });
+        } catch (error) {
+            console.error('Error retrieving videos:', error);
+            res.status(500).json({ error: 'Server error' });
+        }
     }
 }
 
