@@ -96,8 +96,9 @@ const HomeScreen = () => {
                             <View style={[styles.category, {
                                 backgroundColor: 'black'
                             }]}>
-                                <Text style={[styles.subtitle
-                                ]}>{item.title}</Text>
+                                <Text style={[styles.subtitle]}>
+                                    {item.title}
+                                </Text>
                             </View>
                         </TouchableOpacity>
                         </Link>

@@ -5,11 +5,19 @@ import axios from 'axios';
 type Song = {
     _id: string;
     title: string;
-    creator: string;
+    creator: string; // ten artist
     duration: string;
     storageURL: string;
     image: string;
 };
+
+type Video = {
+    _id: string;
+    title: string;
+    creator: string; // ten artist
+    duration: string;
+    storageURL: string;
+}
 
 type Artist = {
     _id: string;
@@ -54,8 +62,6 @@ export const fetchDataFromBackend = async () => {
     }
 };
 
-
-
 const categories = [
     {
         id: '1',
@@ -70,7 +76,7 @@ const categories = [
     {
         id: '3',
         title: 'Short',
-        next: '/user/Short',
+        next: '/user/Shortt',
     },
     {
         id: '4',

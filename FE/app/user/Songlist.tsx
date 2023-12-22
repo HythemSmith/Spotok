@@ -23,7 +23,11 @@ const SongInfoScreen = () => {
             } else if (mode === 'artists') {
                 const filteredTracks = songs.filter((item) =>
                     item.creator.includes(text)
+                    
                 );
+                filteredTracks.forEach((item) => {
+                    console.log(item)
+                })
                 setSearchedTracks(filteredTracks);
             }
         }
@@ -114,7 +118,8 @@ const SongInfoScreen = () => {
                     params: {
                         name: item.title,
                         image: item.image,
-                        artist: item.title
+                        artist: item.creator,
+                        storageURL: item.storageURL
                     }}} asChild>
                     <Pressable>
                         <Song

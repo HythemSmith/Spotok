@@ -5,57 +5,35 @@ import { Stack, useLocalSearchParams, Link } from "expo-router"
 import styles from "../styles";
 import { Audio } from 'expo-av';
 import { songs } from "../../components/components";
+import { useFocusEffect } from '@react-navigation/native';
 
 
-  const Songscreen = () => {
-    const circleSize = 12;
-    const {name, image, artist} = useLocalSearchParams();
-    var song_name = name;
-    var is_playing = false;
-    function get_song_path(song_name:string) {
-      switch (song_name) {
-        case 'Đưa nhau đi trốn': return require('./../../assets/songs/DNDT.mp3');
-        case 'Nấu ăn cho em': return require('./../../assets/songs/NACE.mp3');
-        case 'Ai muốn nghe không': return require('./../../assets/songs/AMNK.mp3');
-        case 'Tháng tư là lời nói dối của em': return require('./../../assets/songs/TTLLNDCE.mp3');
-        case 'Thành phố sương': return require('./../../assets/songs/TPS.mp3');
-        case 'Chỉ Còn Những Mùa Nhớ': return require('./../../assets/songs/CCNMN.mp3');
-        case 'Riêng một góc trời': return require('./../../assets/songs/RMGT.mp3');
-        case 'Khúc thụy du': return require('./../../assets/songs/KTD.mp3');
-        case 'Như đã dấu yêu': return require('./../../assets/songs/NDDY.mp3');
-        case 'Requiem': return require('./../../assets/songs/R.mp3');
-        case 'Eine kleine Nachtmusik': return require('./../../assets/songs/EKN.mp3');
-        case 'Le nozze di Figaro': return require('./../../assets/songs/LNDF.mp3');
-        case 'Tập thể dục': return require('./../../assets/songs/TTD.mp3');
-        case 'Mẹ chẳng có gì': return require('./../../assets/songs/MCCG.mp3');
-        case 'Bên trái': return require('./../../assets/songs/BT.mp3');
-        case 'Nghe em': return require('./../../assets/songs/NE.mp3');
-        case 'Chuyện rằng': return require('./../../assets/songs/CR.mp3');
-        case 'Thay đổi': return require('./../../assets/songs/TD.mp3');
-      }
-    }
-
+const Songscreen = () => {
+  const circleSize = 12;
+  const {name, image, artist, storageURL} = useLocalSearchParams();
+  const [isPlaying, setPlaying] = useState(false)
   const [sound, setSound] = useState();
+  const [prevTrack, setPrevTrack] = useState(null);
+  const [nextTrack, setNextTrack] = useState(null);
+
   async function playSound() {
     console.log('Loading Sound');
-    const { sound } = await Audio.Sound.createAsync(get_song_path(song_name as string));
+    const { sound } = await Audio.Sound.createAsync({ uri: storageURL});
     setSound(sound);
     console.log('Playing Sound');
-    is_playing = true;
+    setPlaying(true)
     await sound.playAsync();
   }
 
-  if(sound == null)
-    playSound();
-
   const handlePlayPause = async () => {
     if (sound) {
-      if (is_playing) {
-        await sound.pauseAsync();
+      if (isPlaying){
+        await sound.pauseAsync()
+        setPlaying(false)
       } else {
-        await sound.playAsync();
-      } 
-      is_playing = !is_playing;
+        await sound.playAsync()
+        setPlaying(true)
+      }
     }
   };
 
@@ -64,15 +42,12 @@ import { songs } from "../../components/components";
       await sound.stopAsync();
       setSound(null);
     }
-    const nextTrack = getNextTrack();
-    song_name = nextTrack.title;
-    console.log(song_name);
-    await playSound();
   };
 
   const getNextTrack =() =>{
     var tmp = 0;
     for(let i = 0; i < songs.length; i++){
+      console.log(-i)
       if (songs[i].title === name){
         tmp = i + 1;
         if (tmp >= songs.length)
@@ -88,15 +63,12 @@ import { songs } from "../../components/components";
       await sound.stopAsync();
       setSound(null);
     }
-    const prevTrack = getPrevTrack();
-    song_name = prevTrack.title;
-    console.log(song_name);
-    await playSound();
   };
 
   const getPrevTrack =() =>{
     var tmp = 0;
     for(let i = 0; i < songs.length; i++){
+      console.log(i)
       if (songs[i].title === name){
         tmp = i - 1;
         if (tmp < 0)
@@ -108,15 +80,20 @@ import { songs } from "../../components/components";
   }
 
   useEffect(() => {
+    console.log(name, image, artist, storageURL)
+    const prev = getPrevTrack();
+    const next = getNextTrack();
+    setPrevTrack(prev);
+    setNextTrack(next);
     return sound
       ? () => {
           console.log('Unloading Sound');
           sound.unloadAsync();
         }
       : undefined;
-  }, [sound]);
+  }, [name, image, artist, storageURL]);
 
-
+  if(sound == null) { playSound() }
 
     return (
         <View style={{ height: "100%", width: "100%", marginTop: 40 }}>
@@ -234,16 +211,17 @@ import { songs } from "../../components/components";
           <Link href={{
             pathname: "/user/Songscreen",
             params: {
-              name: getPrevTrack().title,
-              image: getPrevTrack().image,
-              artist: getPrevTrack().artist,
+              name: prevTrack?.title,
+              image: prevTrack?.image,
+              artist: prevTrack?.creator,
+              storageURL: prevTrack?.storageURL
             }}} asChild>
             <Pressable onPress={playPrevTrack}>
                 <Ionicons name="play-skip-back" size={30} color="white" />
               </Pressable>
             </Link>
             <Pressable onPress={handlePlayPause}>
-              {is_playing ? (
+              {isPlaying ? (
                 <AntDesign name="pausecircle" size={60} color="white" />
               ) : (
                 <Pressable
@@ -263,9 +241,10 @@ import { songs } from "../../components/components";
               <Link href={{
           pathname: "/user/Songscreen",
           params: {
-            name: getNextTrack().title,
-            image: getNextTrack().image,
-            artist: getNextTrack().artist,
+            name: nextTrack?.title,
+            image: nextTrack?.image,
+            artist: nextTrack?.creator,
+            storageURL: nextTrack?.storageURL
           }}} asChild>
             <Pressable 
               onPress={playNextTrack}>
@@ -281,4 +260,4 @@ import { songs } from "../../components/components";
     );
   };
     
-    export default Songscreen;
+export default Songscreen;

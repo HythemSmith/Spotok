@@ -8,6 +8,7 @@ import { useFonts } from 'expo-font';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { AntDesign } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
+import axios from 'axios';
 
 const { height } = Dimensions.get('window');
 
@@ -45,12 +46,29 @@ const InteractionButtons = ({ isPlaying, onPlay }: { isPlaying: boolean, onPlay:
   // Video Feeds Screen
   const ShortScreen = () => {
     const [playingVideoIndex, setPlayingVideoIndex] = useState<number | null>(null);
+    const [videoUrls, setVideoUrls] = useState([]);
+
+    useEffect(() => {
+      // Function to fetch data
+      const fetchData = async () => {
+        try {
+          const response = await axios.get('https://spotok.onrender.com/short'); // Replace with your API endpoint
+          // Assuming data is an array of video URLs in response.data
+          const extractedUrls = response.data.randomVideos.map(video => video.storageURL);
+          setVideoUrls(extractedUrls);
+          console.log(extractedUrls);
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      };
   
+      // Call the fetch function
+      fetchData();
+    }, []);
+
     const handlePlay = (index:number) => {
       setPlayingVideoIndex(index);
     };
-  
-    const videoUrls = ['C:\Users\trung\Downloads\pexels-rodnae-productions-7362669 (1080p).mp4', 'C:\Users\trung\Downloads\pexels-ana-benet-8243250 (720p).mp4', 'C:\Users\trung\Downloads\pexels-ana-benet-8243253 (Original).mp4']; // Replace with your array of video URLs
 
     const handleScroll = (event: any) => {
       const index = Math.round(event.nativeEvent.contentOffset.y / height);
