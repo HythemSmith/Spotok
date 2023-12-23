@@ -43,11 +43,9 @@ const Songscreen = () => {
       setSound(null);
     }
   };
-
   const getNextTrack =() =>{
     var tmp = 0;
     for(let i = 0; i < songs.length; i++){
-      console.log(-i)
       if (songs[i].title === name){
         tmp = i + 1;
         if (tmp >= songs.length)
@@ -57,18 +55,15 @@ const Songscreen = () => {
     }
     return songs[tmp];
   }
-
   const playPrevTrack = async () => {
     if (sound) {
       await sound.stopAsync();
       setSound(null);
     }
   };
-
   const getPrevTrack =() =>{
     var tmp = 0;
     for(let i = 0; i < songs.length; i++){
-      console.log(i)
       if (songs[i].title === name){
         tmp = i - 1;
         if (tmp < 0)
@@ -80,18 +75,17 @@ const Songscreen = () => {
   }
 
   useEffect(() => {
-    console.log(name, image, artist, storageURL)
     const prev = getPrevTrack();
     const next = getNextTrack();
     setPrevTrack(prev);
     setNextTrack(next);
     return sound
-      ? () => {
-          console.log('Unloading Sound');
-          sound.unloadAsync();
-        }
-      : undefined;
-  }, [name, image, artist, storageURL]);
+    ? () => {
+        console.log('Unloading Sound');
+        sound.unloadAsync();
+      }
+    : undefined;
+  }, [sound]);
 
   if(sound == null) { playSound() }
 

@@ -7,15 +7,17 @@ import { useNavigation } from "@react-navigation/native";
 import {categories, playlists, fetchDataFromBackend, songs, artists} from "../../components/components"
 import { Link } from 'expo-router'
 import styles from '../styles'
+import axios from 'axios';
 //import { fetchDataFromBackend, songs, artists } from '../../components/testing';
 
 const HomeScreen = () => {
     const [isLoading, setIsLoading] = useState(true);
-
+    const [playlist, setPlaylist] = useState(null);
     useEffect(() => {
         fetchData();
+        fetchPlaylist();
     }, []);
-
+    // Fetch for your artist and songs
     const fetchData = async () => {
         try {
             const fetchedData = await fetchDataFromBackend();
@@ -36,6 +38,16 @@ const HomeScreen = () => {
             setIsLoading(false); // Set loading state to false on error
         }
     };
+    // Fetch for playlist
+    const fetchPlaylist = async () => {
+        try {
+            const response = await axios.get('http://localhost:3000/playlist');
+            const responseData = response.data;
+            setPlaylist(responseData)
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     // Rest of your component
     if (isLoading) {
@@ -109,15 +121,16 @@ const HomeScreen = () => {
                 Playlists
             </Text>
             <FlatList
-                data={playlists}
+                data={playlist}
                 numColumns={2}
                 columnWrapperStyle={{ justifyContent: "space-between" }}
                 renderItem={({item}) => (
                     <Link href={{
                         pathname: "/user/Songlist",
                         params: {
-                            id: item.title,
-                            image: item.image,
+                            id: item._id,
+                            title: item.title,
+                            image: item.coverURL,
                             mode: 'playlists',
                         }
                         }} asChild>
@@ -126,7 +139,7 @@ const HomeScreen = () => {
                             style={styles.playlist}>
                                 <Image
                                     style={{ height: 55, width: 55 }}
-                                    source={{ uri: item.image }}
+                                    source={{ uri: item.coverURL }}
                                 />
                                 <View
                                     style={{ flex: 1, marginHorizontal: 8, justifyContent: "center" }}
@@ -154,7 +167,8 @@ const HomeScreen = () => {
                     <Link href={{
                         pathname: "/user/Songlist",
                         params: {
-                            id: item.title,
+                            id: item._id,
+                            title: item.title,
                             image: item.image,
                             mode: 'artists'
                         }

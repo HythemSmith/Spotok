@@ -198,7 +198,7 @@ const playlists = [
 //     },
 //     {
 //         id: '6',
-//         title: 'Chỉ Còn Những Mùa Nhớ',
+//         title: 'Chỉ còn những mùa nhớ',
 //         image: 'https://i1.sndcdn.com/artworks-H4576JQHXKOOZqvz-Epinig-t500x500.jpg',
 //         playlist: 'Ballad Love',
 //         artist: 'Hà Anh Tuấn',

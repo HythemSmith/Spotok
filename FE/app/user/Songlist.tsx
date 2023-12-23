@@ -6,24 +6,35 @@ import { Link, Stack, useLocalSearchParams } from "expo-router"
 import { songs } from "../../components/components";
 import Song from "../../components/song_item";
 import { debounce } from "lodash";
+import axios from "axios"
 
 const SongInfoScreen = () => {
-    const { id, image, mode } = useLocalSearchParams();
+    const { id, title, image, mode } = useLocalSearchParams();
     const [searchedTracks, setSearchedTracks] = useState([]);
+    const [songInPlaylist, setSongInPlaylist] = useState([]);
+
+    const fetchSongsInPlaylist = async () => {
+        const playlistId = id
+        const response = await axios.get(`http://localhost:3000/playlist/${playlistId}`)
+        const responseData = response.data.media
+        responseData.forEach(element => {
+            console.log(element)
+        });
+        setSearchedTracks(responseData)
+    }
 
     useEffect(() => {
         const debouncedSearch = debounce(handleSearch, 800);
 
         function handleSearch(text: string) {
             if (mode === 'playlists') {
-                const filteredTracks = songs.filter((item) =>
-                    item.playlist.toLowerCase().includes(text.toLowerCase())
-                );
-                setSearchedTracks(filteredTracks);
+                fetchSongsInPlaylist()
+                searchedTracks.forEach(element => {
+                    console.log(element)
+                });
             } else if (mode === 'artists') {
                 const filteredTracks = songs.filter((item) =>
-                    item.creator.includes(text)
-                    
+                    item.creator.includes(text)  
                 );
                 filteredTracks.forEach((item) => {
                     console.log(item)
@@ -31,11 +42,11 @@ const SongInfoScreen = () => {
                 setSearchedTracks(filteredTracks);
             }
         }
-
+        console.log(searchedTracks)
         if (!searchedTracks.length) {
-            debouncedSearch(id as string);
+            debouncedSearch(title as string);
         }
-    }, [id, mode, searchedTracks]);
+    }, [id, title, mode]);
     return (
         <ScrollView style={{ marginTop: 50 }}>
             <Stack.Screen options={{
@@ -58,7 +69,7 @@ const SongInfoScreen = () => {
             fontWeight: "bold",
             }}
         >
-            {id}
+            {title}
         </Text>
         <View
             style={{
