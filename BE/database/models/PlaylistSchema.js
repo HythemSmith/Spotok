@@ -30,6 +30,10 @@ const PlaylistSchema = new Schema ({
         type: String,
         default: "https://drive.google.com/uc?id=1K49VBDzHmcY_8nEtJgZIVpwrd1H4s7cr",
         require: true
+    },
+    createAt: {
+        type: Date,
+        default: Date.now()
     }
 }) 
 

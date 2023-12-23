@@ -4,6 +4,53 @@ const UserSchema = require('../database/models/UserSchema')
 const mongoose = require('mongoose');
 
 class PlaylistController {
+    // [GET] playlist
+    getPlaylist = async (req, res) => {
+        PlaylistSchame.find({})
+            .sort({ createdAt: -1 }) // Assuming 'createdAt' is your timestamp field
+            .limit(6)
+            .select('_id title media coverURL')
+            .exec()
+                .then(documents => {
+                    res.send(documents)
+                  })
+                  .catch(err => {
+                    console.error(err);
+                    // Handle error
+                  });
+    }
+    // [GET] playlist/:id
+    getSpecificPlaylist = async (req, res) => {
+        try {
+            const playlistId = req.params.id;
+            const playlist = await PlaylistSchame
+            .findById(playlistId)
+            .populate({
+                path: 'media',
+                select: 'title storageURL coverURL creator',
+                populate: {
+                    path: 'creator',
+                    select: 'userName -_id' // Select the 'name' field of the creator
+                }
+            });
+            if (!playlist) {
+              return res.status(404).json({ message: 'Playlist not found' });
+            }
+            // Extract specific fields from each media item
+            const modifiedPlaylist = {
+                media: playlist.media.map(({ title, storageURL, coverURL, creator }) => ({
+                    title,
+                    storageURL,
+                    image: coverURL,
+                    creator: creator.userName // Access the name of the creator
+                }))
+            };
+        
+            res.json(modifiedPlaylist);
+        } catch (error) {
+        res.status(500).json({ message: 'Internal server error' });
+        }
+    }
     // [POST] playlist 
     createPlaylist = async (req, res) => {
         console.log(req.body)
@@ -20,7 +67,6 @@ class PlaylistController {
             res.status(500).send("Failed to create Playlist successful")
         }
     }
-
     // [PUT] playlist/:id
     addSongToPlaylist = async (req, res) => {
         // Get media _id
