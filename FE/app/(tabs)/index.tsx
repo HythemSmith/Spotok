@@ -41,7 +41,7 @@ const HomeScreen = () => {
     // Fetch for playlist
     const fetchPlaylist = async () => {
         try {
-            const response = await axios.get('http://localhost:3000/playlist');
+            const response = await axios.get('https://spotok.onrender.com/playlist');
             const responseData = response.data;
             setPlaylist(responseData)
         } catch (error) {

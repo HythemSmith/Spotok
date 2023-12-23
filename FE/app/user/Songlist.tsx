@@ -15,7 +15,7 @@ const SongInfoScreen = () => {
 
     const fetchSongsInPlaylist = async () => {
         const playlistId = id
-        const response = await axios.get(`http://localhost:3000/playlist/${playlistId}`)
+        const response = await axios.get(`https://spotok.onrender.com/playlist/${playlistId}`)
         const responseData = response.data.media
         responseData.forEach(element => {
             console.log(element)
