@@ -22,14 +22,7 @@ const HomeScreen = () => {
         try {
             const fetchedData = await fetchDataFromBackend();
             if (fetchedData) {
-                // Process the fetched data
-                setIsLoading(false); // Set loading state to false when data is fetched
-                // artists.forEach((item) => {
-                //     console.log(item)
-                // })
-                // songs.forEach((item) => {
-                //     console.log(item)
-                // })
+                setIsLoading(false);
             } else {
                 console.error('Data fetching failed or returned null.');
             }
@@ -67,7 +60,7 @@ const HomeScreen = () => {
             return "Good Evening";
         }
     };
-    // trước cai này hả 
+
     const message = greetingMessage();
     return (
         <ScrollView style={{backgroundColor : 'dimgray'}}>
