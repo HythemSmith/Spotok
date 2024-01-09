@@ -1,11 +1,30 @@
 import React from 'react';
 import {Text, View, Image, TouchableOpacity} from 'react-native';
-import { useNavigation } from "@react-navigation/native";
+import { Link, useNavigation } from "@react-navigation/native";
 import { TextInput } from 'react-native-gesture-handler';
+import { useState } from 'react';
+import { Redirect } from "expo-router"
 
+import axios from 'axios';
 
 export default function LoginScreen () {
     const navigation = useNavigation();
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+
+    const handleLogin = () => {
+        const url = 'https://spotok.onrender.com/login'
+        axios.post(url, { email, password })
+        .then((respone) => {
+            const result = respone.data
+            if (result.status == "SUCCESS") {
+                return true
+            }
+        })
+        .catch((e) => {
+            console.log(e)
+        })
+    }
     return (
         <View style = {{backgroundColor: 'dimgray', flex: 1}}>
             <View style = {{
@@ -39,7 +58,7 @@ export default function LoginScreen () {
                         marginHorizontal: 30,
                         marginTop: 25,
                         fontSize: 20,
-                        fontStyle: "italic",}}>USERNAME: </Text>
+                        fontStyle: "italic",}}>EMAIL: </Text>
                 <TextInput style = {{ 
                             backgroundColor: "white",
                             marginTop: 10,
@@ -50,7 +69,8 @@ export default function LoginScreen () {
                             marginBottom: 0,
 
                 }}
-                    onChange={() => {}}
+                    onChangeText={(text) => setEmail(text)}
+                    value={email}
                 />
                 
                 <Text style={{
@@ -69,21 +89,25 @@ export default function LoginScreen () {
                             borderRadius: 20,
                             margin: 20,
                 }}
-                    onChange={() => {}}
+                    onChangeText={(text) => setPassword(text)}
+                    value = {password}
                 />
             </View>
 
             <View>
-                <TouchableOpacity 
-                                onPress={() => navigation.navigate('index')}
-                                style = {{
-                                    backgroundColor: "#676489",
-                                    marginTop: 20,
-                                    marginBottom: 0,
-                                    margin: 50,
-                                    borderRadius: 30,
-                                    height: 55
-                }}>
+                <TouchableOpacity         
+                    onPress={ () => {
+                        handleLogin()
+                        navigation.navigate('index')
+                    }}
+                    style = {{
+                        backgroundColor: "#676489",
+                        marginTop: 20,
+                        marginBottom: 0,
+                        margin: 50,
+                        borderRadius: 30,
+                        height: 55
+                    }}>
                     <Text style = {{
                         alignSelf: "center",
                         color: "white",

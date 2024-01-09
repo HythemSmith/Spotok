@@ -6,21 +6,27 @@ import { Link } from 'expo-router'
 import {categories, playlists, artists, songs} from "../../components/components"
 import Song from '../../components/song_item'
 import { debounce } from "lodash";
-import { Audio } from 'expo-av';
 
 const PlaylistsScreen = () => {
   const [searchedTracks, setSearchedTracks] = useState(songs);
+  const [numberOfSongs, setnumberOfSongs] = useState(0);
   const [input, setInput] = useState("");
   const debouncedSearch = debounce(handleSearch, 5000);
   function handleSearch(text:string) {
     const filteredTracks = songs.filter((item) =>
       item.title.toLowerCase().includes(text.toLowerCase()));
     setSearchedTracks(filteredTracks);
+    setnumberOfSongs(filteredTracks.length)
   }
   const handleInputChange = (text:string) => {
     setInput(text);
     debouncedSearch(text);
   };
+
+  useEffect(() => {
+    setnumberOfSongs(songs.length)
+  }, [])
+
   return (
     <ScrollView style={{ flex: 1, marginTop: 50 }}>
       <Link href={{
@@ -77,7 +83,7 @@ const PlaylistsScreen = () => {
           Playlist
         </Text>
         <Text style={{ color: "white", fontSize: 13, marginTop: 5 }}>
-          20 songs
+          {numberOfSongs} songs
         </Text>
       </View>
       <Pressable
@@ -118,13 +124,13 @@ const PlaylistsScreen = () => {
           params: {
             name: item.title,
             image: item.image,
-            artist: item.artist,
+            artist: item.creator,
           }}} asChild>
           <Pressable>
             <Song
               name = {item.title}
               image = {item.image}
-              artist = {item.artist}/>
+              artist = {item.creator}/>
           </Pressable>
         </Link>
       )}

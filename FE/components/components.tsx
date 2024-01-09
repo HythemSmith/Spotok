@@ -11,14 +11,6 @@ type Song = {
     image: string;
 };
 
-type Video = {
-    _id: string;
-    title: string;
-    creator: string; // ten artist
-    duration: string;
-    storageURL: string;
-}
-
 type Artist = {
     _id: string;
     title: string; // Changed from userName to title
@@ -78,12 +70,7 @@ const categories = [
         title: 'Short',
         next: '/user/Short',
     },
-    {
-        id: '4',
-        title: 'Trending',
-        next: '/user/Songlist',
-        image: 'https://cdn-icons-png.flaticon.com/512/8675/8675807.png'
-    },
+    
 
 ];
 

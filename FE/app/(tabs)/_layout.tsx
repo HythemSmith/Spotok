@@ -1,8 +1,8 @@
-import { Link, Tabs } from 'expo-router';
-import { Pressable, useColorScheme } from 'react-native';
-import Colors from '../../constants/Colors';
-import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
+import { Ionicons } from '@expo/vector-icons';
+import { useColorScheme } from 'react-native';
+import { Link, Tabs } from 'expo-router';
+import Colors from '../../constants/Colors';
 
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof Ionicons>['name'];
@@ -18,23 +18,21 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-          headerShown: false
-
+        headerShown: false
       }}>
       <Tabs.Screen
         name="index"
         options={{
           title: 'Home',
           tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
-
         }}
       />
-      <Tabs.Screen 
+      <Tabs.Screen
         name='Playlist'
         options={{
           title: 'Playlist',
           tabBarIcon: ({ color }) => <TabBarIcon name="library" color={color} />,
-          }}
+        }}
       />
     </Tabs>
   );

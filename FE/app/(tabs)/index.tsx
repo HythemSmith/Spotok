@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import {Text, View, Image, SafeAreaView, TouchableOpacity, FlatList, Pressable} from 'react-native';
-import { FontAwesome, Ionicons } from '@expo/vector-icons';
+import {Text, View, Image, SafeAreaView, TouchableOpacity, FlatList} from 'react-native';
 import { ScrollView } from 'react-native-virtualized-view';
-import { Platform, StyleSheet } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import {categories, playlists, fetchDataFromBackend, songs, artists} from "../../components/components"
+import {categories, fetchDataFromBackend, artists} from "../../components/components"
 import { Link } from 'expo-router'
 import styles from '../styles'
 import axios from 'axios';
@@ -42,7 +39,6 @@ const HomeScreen = () => {
         }
     }
 
-    // Rest of your component
     if (isLoading) {
         return (
             <View>

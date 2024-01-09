@@ -5,10 +5,6 @@ const fs = require('fs').promises;
 const path = require('path');
 
 class SiteController {
-    // [GET] /home/signup
-    getSignUp(req, res) {
-        res.json({key: '9'})
-    }
     // [POST] /signup
     postSignUp = async (req, res) => {
         let { name, email, password,  dateOfBirth } = req.body|| {};
